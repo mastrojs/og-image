@@ -1,0 +1,14 @@
+{
+  "name": "@mastrojs/og-image",
+  "version": "0.0.5",
+  "fmt": {
+    "lineWidth": 90
+  },
+  "exports": {
+    ".": "./ogImage.ts"
+  },
+  "imports": {
+    "@std/encoding": "jsr:@std/encoding@^1",
+    "canvaskit-wasm": "npm:canvaskit-wasm@^0.40.0"
+  }
+}
