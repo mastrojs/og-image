@@ -3,15 +3,15 @@ import CanvasKitInit, {
   type EmulatedCanvas2DContext,
 } from "canvaskit-wasm";
 import { decodeBase64 } from "@std/encoding/base64";
+import { toLines } from "./util.ts";
+
+export { softHyphen } from "./util.ts";
 
 /** Emulated Canvas, see https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial */
 export type Canvas = CanvasKitInit.EmulatedCanvas2D;
 
 /** Emulated CanvasContext, see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D */
 export type CanvasContext = EmulatedCanvas2DContext;
-
-// deno-lint-ignore no-explicit-any
-const CanvasKit: CanvasKit = await (CanvasKitInit as any)();
 
 /** Options */
 export interface Opts {
@@ -77,32 +77,13 @@ export const renderImage = (text: string, opts: Opts): Response => {
   ctx.fillStyle = fontColor;
   ctx.font = font;
 
-  const words = toWords(text);
   // 2*paddingRight to compensate for ctx.measureText that's sometimes off:
   const lineWidth = width - (paddingLeft + 2 * paddingRight);
-  const lines: string[][] = [[]];
-  let remainingWidth = lineWidth;
-  words.forEach((word) => {
-    const line = lines[lines.length - 1];
-    const wordWidth = ctx.measureText(" " + word).width;
-    if (word === "") {
-      // there was a newline in input
-      lines.push([]);
-      remainingWidth = lineWidth;
-    } else if (wordWidth < remainingWidth) {
-      // word still fits on current line
-      line.push(word);
-      remainingWidth -= wordWidth;
-    } else {
-      // no more space: start new line
-      lines.push([word]);
-      remainingWidth = lineWidth;
-    }
-  });
+  const lines = toLines(text, lineWidth, ctx.measureText.bind(ctx));
   let y = fontSize + paddingTop;
   lines.forEach((line) => {
-    if (line.length > 0) {
-      ctx.fillText(line.join(" "), paddingLeft, y);
+    if (line) {
+      ctx.fillText(line, paddingLeft, y);
       y += fontSize * lineHeight;
     } else {
       // a whole empty line takes too much space
@@ -112,6 +93,9 @@ export const renderImage = (text: string, opts: Opts): Response => {
 
   return toResponse(canvas);
 };
+
+// deno-lint-ignore no-explicit-any
+const CanvasKit: CanvasKit = await (CanvasKitInit as any)();
 
 const toResponse = (canvas: Canvas) => {
   const base64 = canvas.toDataURL().split(",")[1];
@@ -123,9 +107,3 @@ const toResponse = (canvas: Canvas) => {
   }
   return res;
 };
-
-const toWords = (str: string) =>
-  str.split(" ").flatMap((word) =>
-    // split by newline and then intersperse empty string
-    word.split("\n").flatMap((w, i) => i === 0 ? w : ["", w])
-  );

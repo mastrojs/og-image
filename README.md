@@ -4,7 +4,9 @@ A simple helper function to generate a PNG image from some text.
 
 Intended use-case is to generate images for `og:image` [link preview metadata](https://getoutofmyhead.dev/link-preview-meta-tags/) in a [Mastro](https://mastrojs.github.io/) project. But in principle, you can use it to rasterize any text to a PNG.
 
-In typical Mastro fashion, this package is very lean yet quite powerful. Instead of spinning up a whole web browser to take a screenshot of a website (like other og-image generators do), we use [`canvaskit-wasm`](https://www.npmjs.com/package/canvaskit-wasm). This emulates the [standard browser Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/), which you can use to draw a nice background. After that, we draw the text over it and render everything to PNG. While we support newlines, we don't support hyphenation, and if you have too much text it will overflow.
+In typical Mastro fashion, this package is very lean yet quite powerful. Instead of spinning up a whole web browser to take a screenshot of a website (like other og-image generators do), we use [`canvaskit-wasm`](https://www.npmjs.com/package/canvaskit-wasm). This emulates the [standard browser Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/), which you can use to draw a nice background. After that, we draw the text over it and render everything to PNG.
+
+We support newlines and [soft hyphens](https://en.wikipedia.org/wiki/Soft_hyphen), but no hyphenation dictionaries. And if you have too much text it will overflow.
 
 ## Install
 
@@ -19,7 +21,6 @@ In typical Mastro fashion, this package is very lean yet quite powerful. Instead
 ### Bun
 
     bunx jsr add @mastrojs/og-image
-
 
 ## Usage
 
@@ -106,5 +107,5 @@ export const GET = (req: Request) => {
       ctx.drawImage(canvas.decodeImage(icon) as any, 300, 100);
     },
   });
-}
+};
 ```
