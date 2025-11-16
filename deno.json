@@ -1,8 +1,11 @@
 {
   "name": "@mastrojs/og-image",
-  "version": "0.0.7",
+  "version": "0.0.8",
+  "tasks": {
+    "publish": "deno test && deno publish"
+  },
   "fmt": {
-    "lineWidth": 90
+    "lineWidth": 100
   },
   "exports": {
     ".": "./ogImage.ts"

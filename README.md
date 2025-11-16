@@ -41,7 +41,7 @@ Assuming you have a [Mastro](https://mastrojs.github.io/) project with a markdow
 
 ```ts
 import { readMarkdownFile } from "@mastrojs/markdown";
-import { html, htmlToResponse, readFile } from "@mastrojs/mastro";
+import { html, htmlToResponse, readDir, readFile } from "@mastrojs/mastro";
 import { renderImage } from "@mastrojs/og-image";
 
 const fontFile = await readFile("data/Roboto-Bold.ttf");
@@ -73,10 +73,20 @@ export const GET = async (req: Request) => {
     `);
   }
 };
+
+// only needed for static site generation
+export const getStaticPaths = async () => {
+  const posts = await readDir("data/posts/");
+  return posts.flatMap((p) => {
+    const path = "/" + p.slice(0, -3) + "/";
+    return [path, path + "og.png"];
+  });
+}
 ```
 
-Then after launching your dev server, you can access the rendered blog post under `http://localhost:8000/hello/`, and the corresponding og-image under `http://localhost:8000/hello/og.png`.
+Then after launching your dev server, you can access the rendered blog post under `http://localhost:8000/hello/` (don't forget the trailing slash), and the corresponding og-image under `http://localhost:8000/hello/og.png`.
 
+The above is similar to the [blog example in the guide](https://mastrojs.github.io/guide/static-blog-from-markdown-files/), except we're using `[...slug].server.ts` instead of `[slug].server.ts` to capture the routes with the additional slash.
 
 ### Image options
 
