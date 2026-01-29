@@ -63,7 +63,7 @@ export const GET = async (req: Request) => {
       <html>
         <head>
           <title>${title}</title>
-          <meta property="og:image" content="./og.png">
+          <meta property="og:image" content=${req.url + "og.png"}>
         </head>
         <body>
           <h1>${title}</h1>
