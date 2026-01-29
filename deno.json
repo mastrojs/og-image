@@ -1,6 +1,6 @@
 {
   "name": "@mastrojs/og-image",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "tasks": {
     "publish": "deno test && deno publish"
   },
