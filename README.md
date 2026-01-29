@@ -108,7 +108,7 @@ export const GET = (req: Request) => {
     background: (ctx, canvas) => {
       // draw green background
       ctx.fillStyle = "green";
-      ctx.fillRect(0, 0, 1200, 600);
+      ctx.fillRect(0, 0, 1200, 630);
 
       // draw text at x=100, y=90
       ctx.fillText("My title", 100, 90);

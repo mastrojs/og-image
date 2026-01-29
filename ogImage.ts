@@ -27,7 +27,7 @@ export interface Opts {
   fontFile: Uint8Array<ArrayBufferLike>;
   /** in px. defaults to 67 */
   fontSize?: number;
-  /** in px. defaults to 600, which is recommended for og:image */
+  /** in px. defaults to 630, which is recommended for og:image */
   height?: number;
   /** defaults to 1.25 */
   lineHeight?: number;
@@ -52,7 +52,7 @@ export const renderImage = (text: string, opts: Opts): Response => {
     fontColor = "black",
     fontFile,
     fontSize = 67,
-    height = 600,
+    height = 630,
     lineHeight = 1.25,
     paddingLeft = 100,
     paddingRight = 100,
