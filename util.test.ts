@@ -19,10 +19,39 @@ Deno.test("toLines", () => {
   );
 });
 
-Deno.test("toLines soft-hyphen handling", () => {
+Deno.test("toLines single soft-hyphen", () => {
   assertEquals(
     toLines(
-      `How are long words hyphen${softHyphen}ated? Where they should?`,
+      `How are long words hyphen${softHyphen}ated? Hopefully where they should?`,
+      lineWidth,
+      measureText,
+    ),
+    [
+      "How are long words hyphen-",
+      "ated? Hopefully where they",
+      "should?",
+    ],
+  );
+});
+
+Deno.test("toLines double soft-hyphen 1", () => {
+  assertEquals(
+    toLines(
+      `How are longer words hy${softHyphen}phen${softHyphen}ated? Where they should?`,
+      lineWidth,
+      measureText,
+    ),
+    [
+      "How are longer words hy-",
+      "phenated? Where they should?",
+    ],
+  );
+});
+
+Deno.test("toLines double soft-hyphen 2", () => {
+  assertEquals(
+    toLines(
+      `How are long words hy${softHyphen}phen${softHyphen}ated? Where they should?`,
       lineWidth,
       measureText,
     ),
@@ -31,41 +60,19 @@ Deno.test("toLines soft-hyphen handling", () => {
       "ated? Where they should?",
     ],
   );
+});
 
+Deno.test("toLines soft-hyphens with very long word", () => {
   assertEquals(
     toLines(
-      `How are longer words hy${softHyphen}phen${softHyphen}ated? Where they should?`,
+      `How are words hy${softHyphen}phenatedThat${softHyphen}NeedEvenMore${softHyphen}Space${softHyphen}Still`,
       lineWidth,
       measureText,
     ),
     [
-      "How are longer words hyphen-",
-      "ated? Where they should?",
-    ],
-  );
-
-  assertEquals(
-    toLines(
-      `How are very long words hy${softHyphen}phen${softHyphen}ated? Where they should?`,
-      lineWidth,
-      measureText,
-    ),
-    [
-      "How are very long words hy-",
-      "phenated? Where they should?",
-    ],
-  );
-
-  assertEquals(
-    toLines(
-      `How are very long words hy${softHyphen}phenatedThat${softHyphen}NeedEvenMore${softHyphen}Space${softHyphen}Still`,
-      lineWidth,
-      measureText,
-    ),
-    [
-      "How are very long words hy-",
-      "phenatedThatNeedEvenMoreSpace-",
-      "Still",
+      "How are words hy-",
+      "phenatedThatNeedEvenMore-",
+      "SpaceStill",
     ],
   );
 });

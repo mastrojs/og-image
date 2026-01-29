@@ -27,21 +27,23 @@ export const toLines = (
       // word still fits on current line
       line.push(wordWithoutShys);
       remainingWidth -= wordWidth;
-    } else {
-      // whole word doesn't fit on current line
-      if (word.includes(softHyphen)) {
-        const parts = hyphenate(word, remainingWidth, measureText);
-        if (parts) {
-          line.push(parts.preBreak + "-");
-          // start new line and try remainder again in next loop iteration
-          lines.push([]);
-          words[i] = parts.postBreak;
-          i--;
-        }
+    } else if (word.includes(softHyphen)) {
+      // whole word doesn't fit on current line and has soft hyphen
+      const parts = hyphenate(word, remainingWidth, measureText);
+      if (parts) {
+        line.push(parts.preBreak + "-");
+        // use only remaining part of word in next loop iteration:
+        words[i] = parts.postBreak;
+        remainingWidth = lineWidth;
       } else {
-        // start new line
-        lines.push([wordWithoutShys]);
+        // no part of word fits on current line
+        remainingWidth = lineWidth;
       }
+      lines.push([]); // start new line
+      i--; // try again in next loop iteration
+    } else {
+      // whole word doesn't fit on current line and has no soft hyphen
+      lines.push([wordWithoutShys]); // start new line
       remainingWidth = lineWidth - wordWidth;
     }
   }
@@ -67,7 +69,8 @@ const hyphenate = (
     sum += measureText(syllable).width;
     prefixSums.push(sum);
   });
-  const i = prefixSums.findLastIndex((l) => l < remainingWidth) + 1;
+  const i = prefixSums.findLastIndex((l) => l < remainingWidth);
+  // console.log({ i, syllables, prefixSums, remainingWidth });
   if (i > 0 && i < syllables.length) {
     const preBreak = syllables.slice(0, i).join("").replaceAll(softHyphen, "");
     const postBreak = syllables.slice(i).join(softHyphen);
