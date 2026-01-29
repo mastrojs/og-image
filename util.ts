@@ -15,7 +15,10 @@ export const toLines = (
     const word = words[i];
     const wordWithoutShys = word.replaceAll(softHyphen, "");
     const line = lines[lines.length - 1];
-    const wordWidth = measureText(" " + wordWithoutShys).width;
+    const isStartOfLine = remainingWidth === lineWidth;
+    const wordWidth = measureText((isStartOfLine ? "" : " ") + wordWithoutShys).width;
+
+    // console.log({ remaining: remainingWidth, word: wordWithoutShys, w: wordWidth, fits: wordWidth < remainingWidth });
     if (word === "") {
       // there was a newline in input
       lines.push([]);
@@ -39,7 +42,7 @@ export const toLines = (
         // start new line
         lines.push([wordWithoutShys]);
       }
-      remainingWidth = lineWidth;
+      remainingWidth = lineWidth - wordWidth;
     }
   }
 

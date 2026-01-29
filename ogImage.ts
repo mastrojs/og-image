@@ -1,7 +1,4 @@
-import CanvasKitInit, {
-  type CanvasKit,
-  type EmulatedCanvas2DContext,
-} from "canvaskit-wasm";
+import CanvasKitInit, { type CanvasKit, type EmulatedCanvas2DContext } from "canvaskit-wasm";
 import { decodeBase64 } from "@std/encoding/base64";
 import { toLines } from "./util.ts";
 
@@ -77,8 +74,7 @@ export const renderImage = (text: string, opts: Opts): Response => {
   ctx.fillStyle = fontColor;
   ctx.font = font;
 
-  // 2*paddingRight to compensate for ctx.measureText that's sometimes off:
-  const lineWidth = width - (paddingLeft + 2 * paddingRight);
+  const lineWidth = width - paddingLeft - paddingRight;
   const lines = toLines(text, lineWidth, ctx.measureText.bind(ctx));
   let y = fontSize + paddingTop;
   lines.forEach((line) => {
