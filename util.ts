@@ -35,12 +35,14 @@ export const toLines = (
         // use only remaining part of word in next loop iteration:
         words[i] = parts.postBreak;
         remainingWidth = lineWidth;
+        lines.push([]); // start new line
+        i--; // try again in next loop iteration
       } else {
-        // no part of word fits on current line
-        remainingWidth = lineWidth;
+        // no part of word fits on current line (e.g. syllable longer than line)
+        // put whole word on next line and advance
+        lines.push([wordWithoutShys]);
+        remainingWidth = lineWidth - wordWidth;
       }
-      lines.push([]); // start new line
-      i--; // try again in next loop iteration
     } else {
       // whole word doesn't fit on current line and has no soft hyphen
       lines.push([wordWithoutShys]); // start new line

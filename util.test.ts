@@ -76,3 +76,14 @@ Deno.test("toLines soft-hyphens with very long word", () => {
     ],
   );
 });
+
+Deno.test("toLines syllable longer than line width", () => {
+  const longSyllable = "a".repeat(31);
+  assertEquals(
+    toLines(`Short ${longSyllable}${softHyphen}b`, lineWidth, measureText),
+    [
+      "Short",
+      longSyllable + "b",
+    ],
+  );
+});
