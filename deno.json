@@ -1,17 +1,8 @@
 {
   "name": "@mastrojs/og-image",
-  "version": "0.0.11",
-  "tasks": {
-    "publish": "deno test && deno publish"
-  },
-  "fmt": {
-    "lineWidth": 100
-  },
+  "version": "0.0.12",
   "exports": {
-    ".": "./ogImage.ts"
-  },
-  "imports": {
-    "@std/encoding": "jsr:@std/encoding@^1",
-    "canvaskit-wasm": "npm:canvaskit-wasm@^0.40.0"
+    ".": "./index.ts"
   }
 }
+
